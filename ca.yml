@@ -1,0 +1,183 @@
+#
+# Copyright IBM Corp All Rights Reserved
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+version: '3.2'
+
+networks:
+  testNet:
+    driver: overlay
+    attachable: true
+
+services:
+
+  caIDP1:
+    image: hyperledger/fabric-ca:x86_64-1.0.5
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.idp1.example.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.idp1.example.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/8b401c9102a877af929fd8c500d9d6e07397c3e33e475c38f8108b6a091679ba_sk
+
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.idp1.example.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/8b401c9102a877af929fd8c500d9d6e07397c3e33e475c38f8108b6a091679ba_sk
+    ports:
+      - "7054:7054"
+    command:  sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.idp1.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/8b401c9102a877af929fd8c500d9d6e07397c3e33e475c38f8108b6a091679ba_sk -b admin:adminpw -d'
+
+    volumes:
+      - ./crypto-config/peerOrganizations/idp1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    #container_name: ca.org1.example.command
+    networks:
+      testNet:
+        aliases:
+          - ca.idp1.example.com
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  caIDP2:
+    image: hyperledger/fabric-ca:x86_64-1.0.5
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.idp2.example.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.idp2.example.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/6bbc5a293bb317cdf9304fb0e7f37346bf59fe53fe86fa65cdb5354aab0b055b_sk
+
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.idp2.example.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/6bbc5a293bb317cdf9304fb0e7f37346bf59fe53fe86fa65cdb5354aab0b055b_sk
+    ports:
+      - "8054:7054"
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.idp2.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/6bbc5a293bb317cdf9304fb0e7f37346bf59fe53fe86fa65cdb5354aab0b055b_sk -b admin:adminpw -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/idp2.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    #container_name: ca.org2.example.com
+    networks:
+      testNet:
+        aliases:
+          - ca.idp2.example.com
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  caIDP3:
+    image: hyperledger/fabric-ca:x86_64-1.0.5
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.idp3.example.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.idp3.example.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/657ee73ee7b0d6a501fa1c7840fafad3ae6e6f8142ada872bee5a22d5989753b_sk
+
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.idp3.example.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/657ee73ee7b0d6a501fa1c7840fafad3ae6e6f8142ada872bee5a22d5989753b_sk
+    ports:
+      - "9054:7054"
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.idp3.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/657ee73ee7b0d6a501fa1c7840fafad3ae6e6f8142ada872bee5a22d5989753b_sk -b admin:adminpw -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/idp3.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    #container_name: ca.org2.example.com
+    networks:
+      testNet:
+        aliases:
+          - ca.idp3.example.com
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  caAS1:
+    image: hyperledger/fabric-ca:x86_64-1.0.5
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.as1.example.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.as1.example.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/b95eba35d52471ebef987e3d2de82cec7bbb22e4aa515fd3f7855fb92c50a11b_sk
+
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.as1.example.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/b95eba35d52471ebef987e3d2de82cec7bbb22e4aa515fd3f7855fb92c50a11b_sk
+    ports:
+      - "10054:7054"
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.as1.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/b95eba35d52471ebef987e3d2de82cec7bbb22e4aa515fd3f7855fb92c50a11b_sk -b admin:adminpw -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/as1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    #container_name: ca.org2.example.com
+    networks:
+      testNet:
+        aliases:
+          - ca.as1.example.com
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  caAS2:
+    image: hyperledger/fabric-ca:x86_64-1.0.5
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.as2.example.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.as2.example.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/739567d6d541e57f444f2fa99318c59f98abadf9ffd8b52043c1eb0176663306_sk
+
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.as2.example.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/739567d6d541e57f444f2fa99318c59f98abadf9ffd8b52043c1eb0176663306_sk
+    ports:
+      - "11054:7054"
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.as2.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/739567d6d541e57f444f2fa99318c59f98abadf9ffd8b52043c1eb0176663306_sk -b admin:adminpw -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/as2.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    #container_name: ca.org2.example.com
+    networks:
+      testNet:
+        aliases:
+          - ca.as2.example.com
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+
+  caRP1:
+    image: hyperledger/fabric-ca:x86_64-1.0.5
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.rp1.example.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.rp1.example.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/bfd893c168c06f580cc230fd982cb966122aea05683be45ab748aeeeccdf3f6a_sk
+
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.rp1.example.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/bfd893c168c06f580cc230fd982cb966122aea05683be45ab748aeeeccdf3f6a_sk
+    ports:
+      - "12054:7054"
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.rp1.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/bfd893c168c06f580cc230fd982cb966122aea05683be45ab748aeeeccdf3f6a_sk -b admin:adminpw -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/rp1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    #container_name: ca.org2.example.com
+    networks:
+      testNet:
+        aliases:
+          - ca.rp1.example.com
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3

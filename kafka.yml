@@ -1,0 +1,165 @@
+#
+# Copyright IBM Corp All Rights Reserved
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+version: '3.2'
+
+
+networks:
+  testNet:
+    external:
+      name: did_testNet
+
+services:
+
+  kafka0:
+#    container_name: kafka0
+    image: hyperledger/fabric-kafka
+#    restart: always
+    environment:
+      # ========================================================================
+      #     Reference: https://kafka.apache.org/documentation/#configuration
+      # ========================================================================
+      #
+      # broker.id
+      - KAFKA_BROKER_ID=0
+      #
+      # min.insync.replicas
+      # Let the value of this setting be M. Data is considered committed when
+      # it is written to at least M replicas (which are then considered in-sync
+      # and belong to the in-sync replica set, or ISR). In any other case, the
+      # write operation returns an error. Then:
+      # 1. If up to M-N replicas -- out of the N (see default.replication.factor
+      # below) that the channel data is written to -- become unavailable,
+      # operations proceed normally.
+      # 2. If more replicas become unavailable, Kafka cannot maintain an ISR set
+      # of M, so it stops accepting writes. Reads work without issues. The
+      # channel becomes writeable again when M replicas get in-sync.
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      #
+      # default.replication.factor
+      # Let the value of this setting be N. A replication factor of N means that
+      # each channel will have its data replicated to N brokers. These are the
+      # candidates for the ISR set of a channel. As we noted in the
+      # min.insync.replicas section above, not all of these brokers have to be
+      # available all the time. In this sample configuration we choose a
+      # default.replication.factor of K-1 (where K is the total number of brokers in
+      # our Kafka cluster) so as to have the largest possible candidate set for
+      # a channels ISR. We explicitly avoid setting N equal to K because
+      # channel creations cannot go forward if less than N brokers are up. If N
+      # were set equal to K, a single broker going down would mean that we would
+      # not be able to create new channels, i.e. the crash fault tolerance of
+      # the ordering service would be non-existent.
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      #
+      # zookeper.connect
+      # Point to the set of Zookeeper nodes comprising a ZK ensemble.
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+      #
+      # zookeeper.connection.timeout.ms
+      # The max time that the client waits to establish a connection to
+      # Zookeeper. If not set, the value in zookeeper.session.timeout.ms (below)
+      # is used.
+      #- KAFKA_ZOOKEEPER_CONNECTION_TIMEOUT_MS = 6000
+      #
+      # zookeeper.session.timeout.ms
+      #- KAFKA_ZOOKEEPER_SESSION_TIMEOUT_MS = 6000
+
+      - KAFKA_MESSAGE_MAX_BYTES=103809024
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+
+    ports:
+      - '9092'
+    networks:
+      testNet:
+        aliases:
+          - kafka0
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  kafka1:
+#    container_name: kafka1
+    image: hyperledger/fabric-kafka
+#    restart: always
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+
+      - KAFKA_MESSAGE_MAX_BYTES=103809024
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+
+    ports:
+      - '9092'
+    networks:
+      testNet:
+        aliases:
+          - kafka1
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  kafka2:
+#    container_name: kafka2
+    image: hyperledger/fabric-kafka
+#    restart: always
+    environment:
+      - KAFKA_BROKER_ID=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+
+      - KAFKA_MESSAGE_MAX_BYTES=103809024
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+
+    ports:
+      - '9092'
+    networks:
+      testNet:
+        aliases:
+          - kafka2
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  kafka3:
+#    container_name: kafka3
+    image: hyperledger/fabric-kafka
+#    restart: always
+    environment:
+      - KAFKA_BROKER_ID=3
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+
+      - KAFKA_MESSAGE_MAX_BYTES=103809024
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+
+    ports:
+      - '9092'
+    networks:
+      testNet:
+        aliases:
+          - kafka3
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3

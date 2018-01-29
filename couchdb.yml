@@ -1,0 +1,138 @@
+#
+# Copyright IBM Corp All Rights Reserved
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+version: '3.2'
+
+networks:
+  testNet:
+    external:
+      name: did_testNet
+
+services:
+  couchdbIDP1:
+    #container_name: couchdbOrg1
+    image: hyperledger/fabric-couchdb:x86_64-1.0.5
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=couchdb1
+      - COUCHDB_PASSWORD=myPassword1
+    ports:
+      - 5984:5984
+    networks:
+      testNet:
+        aliases:
+          - couchdbIDP1
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  couchdbIDP2:
+    #container_name: couchdbOrg2
+    image: hyperledger/fabric-couchdb:x86_64-1.0.5
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=couchdb2
+      - COUCHDB_PASSWORD=myPassword2
+    ports:
+      - 6984:5984
+    networks:
+      testNet:
+        aliases:
+          - couchdbIDP2
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  couchdbIDP3:
+    #container_name: couchdbOrg2
+    image: hyperledger/fabric-couchdb:x86_64-1.0.5
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=couchdb3
+      - COUCHDB_PASSWORD=myPassword3
+    ports:
+      - 7984:5984
+    networks:
+      testNet:
+        aliases:
+          - couchdbIDP3
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  couchdbAS1:
+    #container_name: couchdbOrg2
+    image: hyperledger/fabric-couchdb:x86_64-1.0.5
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=couchdb4
+      - COUCHDB_PASSWORD=myPassword4
+    ports:
+      - 8984:5984
+    networks:
+      testNet:
+        aliases:
+          - couchdbAS1
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  couchdbAS2:
+    #container_name: couchdbOrg2
+    image: hyperledger/fabric-couchdb:x86_64-1.0.5
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=couchdb5
+      - COUCHDB_PASSWORD=myPassword5
+    ports:
+      - 9984:5984
+    networks:
+      testNet:
+        aliases:
+          - couchdbAS2
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  couchdbRP1:
+    #container_name: couchdbOrg2
+    image: hyperledger/fabric-couchdb:x86_64-1.0.5
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=couchdb6
+      - COUCHDB_PASSWORD=myPassword6
+    ports:
+      - 10984:5984
+    networks:
+      testNet:
+        aliases:
+          - couchdbRP1
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
