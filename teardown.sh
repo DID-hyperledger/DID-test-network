@@ -5,7 +5,7 @@
 isManager=`docker node inspect self --format "{{ .ManagerStatus.Leader }}"`
 if [ ${isManager} = true ]
 then
-    docker stack rm james
+    docker stack rm did
 fi
 
 CONTAINER_IDS=$(docker ps -aq)
@@ -17,7 +17,7 @@ else
 fi
 echo
 
-rm -rf channel-artifacts/*.block channel-artifacts/*.tx crypto-config
+#rm -rf channel-artifacts/*.block channel-artifacts/*.tx crypto-config
 
 echo "================= Cleaned crypto artifacts=================="
 #DOCKER_IMAGE_IDS=$(docker images | grep "dev\|none\|test-vp\|peer[0-9]-" | awk '{print $3}')
